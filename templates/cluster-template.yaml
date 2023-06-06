@@ -1,0 +1,33 @@
+---
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: Cluster
+metadata:
+  name: "${CLUSTER_NAME}"
+spec:
+  clusterNetwork:
+    pods:
+      cidrBlocks: ["192.168.0.0/16"]
+  infrastructureRef:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+    kind: KwokCluster
+    name: "${CLUSTER_NAME}"
+  controlPlaneRef:
+    kind: KwokControlPlane
+    apiVersion: controlplane.cluster.x-k8s.io/v1alpha1
+    name: "${CLUSTER_NAME}-control-plane"
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: KwokCluster
+metadata:
+  name: "${CLUSTER_NAME}"
+spec:
+  bindAddress: "${BIND_ADDRESS:=127.0.0.1}"
+---
+kind: KwokControlPlane
+apiVersion: controlplane.cluster.x-k8s.io/v1alpha1
+metadata:
+  name: "${CLUSTER_NAME}-control-plane"
+spec:
+  simulationConfig:
+    reconcile:
+      latency: "30s"

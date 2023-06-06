@@ -1,0 +1,94 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.10.0
+  creationTimestamp: null
+  name: kwokcontrolplanes.controlplane.cluster.x-k8s.io
+spec:
+  group: controlplane.cluster.x-k8s.io
+  names:
+    kind: KwokControlPlane
+    listKind: KwokControlPlaneList
+    plural: kwokcontrolplanes
+    singular: kwokcontrolplane
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: KwokControlPlane is the Schema for the kwokcontrolplanes API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KwokControlPlaneSpec defines the desired state of KwokControlPlane
+            properties:
+              controlPlaneEndpoint:
+                description: ControlPlaneEndpoint represents the endpoint used to
+                  communicate with the control plane.
+                properties:
+                  host:
+                    description: The hostname on which the API server is serving.
+                    type: string
+                  port:
+                    description: The port on which the API server is serving.
+                    format: int32
+                    type: integer
+                required:
+                - host
+                - port
+                type: object
+              simulationConfig:
+                description: SimulationConfig holds the configuration options for
+                  changing the behavior of the simulation.
+                properties:
+                  reconcile:
+                    description: Reconcile holds the configuration options for changing
+                      the behavior of the reconciliation loop.
+                    properties:
+                      latency:
+                        description: Latency is the amount of time to wait before
+                          returning from the reconcile loop.
+                        type: string
+                    required:
+                    - latency
+                    type: object
+                type: object
+            type: object
+          status:
+            description: KwokControlPlaneStatus defines the observed state of KwokControlPlane
+            properties:
+              initialized:
+                description: Initialized denotes whether or not the control plane
+                  has the uploaded kubernetes config-map.
+                type: boolean
+              lastreconcileduration:
+                description: LastReconcileTime is the duration of the last reconcile
+                  loop.
+                format: int64
+                type: integer
+              ready:
+                default: false
+                description: Ready denotes that the KwokControlPlane API Server is
+                  ready to receive requests and that the VPC infra is ready.
+                type: boolean
+            required:
+            - ready
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

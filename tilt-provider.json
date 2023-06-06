@@ -1,0 +1,17 @@
+[
+    {
+      "name": "kwok",
+      "config": {
+        "image": "ghcr.io/capi-samples/cluster-api-provider-kwok:dev",
+        "live_reload_deps": [
+          "main.go",
+          "go.mod",
+          "go.sum",
+          "api",
+          "internal",
+          "pkg"
+        ],
+        "label": "CAPKW"
+      }
+    }
+  ]
