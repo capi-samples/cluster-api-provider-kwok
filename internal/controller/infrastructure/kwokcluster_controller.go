@@ -173,7 +173,7 @@ func (r *KwokClusterReconciler) SetupWithManager(ctx context.Context, mgr ctrl.M
 }
 
 func (r *KwokClusterReconciler) kwokControlPlaneToKwokCluster(ctx context.Context, log *logr.Logger) handler.MapFunc {
-	return func(o client.Object) []ctrl.Request {
+	return func(ctx context.Context, o client.Object) []ctrl.Request {
 		kwokControlPlane, ok := o.(*controlplanev1.KwokControlPlane)
 		if !ok {
 			log.Error(errors.Errorf("expected an KwokControlPlane, got %T instead", o), "failed to map KwokControlPlane")
