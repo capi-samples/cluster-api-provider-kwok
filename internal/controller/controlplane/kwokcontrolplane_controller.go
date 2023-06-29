@@ -202,7 +202,7 @@ func (r *KwokControlPlaneReconciler) SetupWithManager(ctx context.Context, mgr c
 	}
 
 	if err = c.Watch(
-		&source.Kind{Type: &clusterv1.Cluster{}},
+		source.Kind(mgr.GetCache(), &clusterv1.Cluster{}),
 		handler.EnqueueRequestsFromMapFunc(util.ClusterToInfrastructureMapFunc(ctx, controlPlane.GroupVersionKind(), mgr.GetClient(), &controlplanev1.KwokControlPlane{})),
 		predicates.ClusterUnpausedAndInfrastructureReady(logger),
 	); err != nil {
@@ -210,7 +210,7 @@ func (r *KwokControlPlaneReconciler) SetupWithManager(ctx context.Context, mgr c
 	}
 
 	if err = c.Watch(
-		&source.Kind{Type: &infrav1.KwokCluster{}},
+		source.Kind(mgr.GetCache(), &infrav1.KwokCluster{}),
 		handler.EnqueueRequestsFromMapFunc(r.kwokClusterToKwokControlPlane(ctx, &logger)),
 	); err != nil {
 		return fmt.Errorf("failed adding a watch for KwokCluster")
@@ -220,7 +220,7 @@ func (r *KwokControlPlaneReconciler) SetupWithManager(ctx context.Context, mgr c
 }
 
 func (r *KwokControlPlaneReconciler) kwokClusterToKwokControlPlane(ctx context.Context, logger *logr.Logger) handler.MapFunc {
-	return func(o client.Object) []ctrl.Request {
+	return func(ctx context.Context, o client.Object) []ctrl.Request {
 		kwokCluster, ok := o.(*infrav1.KwokCluster)
 		if !ok {
 			logger.Error(fmt.Errorf("expected a KwokCluster but got a %T", o), "Expected KwokCluster")
