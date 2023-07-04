@@ -20,6 +20,7 @@ import (
 	"time"
 
 	sharedv1 "github.com/capi-samples/cluster-api-provider-kwok/api/shared/v1alpha1"
+	apiv1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	clusterv1 "sigs.k8s.io/cluster-api/api/v1beta1"
 	"sigs.k8s.io/cluster-api/errors"
@@ -38,6 +39,11 @@ type KwokMachineSpec struct {
 	// SimulationConfig holds the configuration options for changing the behavior of the simulation.
 	//+optional
 	SimulationConfig *sharedv1.SimulationConfig `json:"simulationConfig,omitempty"`
+
+	// NodeSpec defines node spec on the new kwok machine nodes
+	NodeSpec *apiv1.NodeSpec `json:"nodeSpec,omitempty"`
+	// NodeStatus defines node status on the new kwok machine nodes
+	NodeStatus *apiv1.NodeStatus `json:"nodeStatus,omitempty"`
 }
 
 // KwokMachineStatus defines the observed state of KwokMachine
