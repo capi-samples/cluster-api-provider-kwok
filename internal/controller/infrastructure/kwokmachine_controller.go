@@ -80,7 +80,7 @@ func (r *KwokMachineReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		return ctrl.Result{Requeue: true}, nil
 	}
 
-	logger = logger.WithValues("machine", machine.Name)
+	logger = logger.WithValues("machine", machine.Name, "kwokMachine", kwokMachine.GetName())
 
 	if kwokMachine.Status.FailureMessage != nil ||
 		kwokMachine.Status.FailureReason != nil {
@@ -127,14 +127,18 @@ func (r *KwokMachineReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	if !machine.ObjectMeta.DeletionTimestamp.IsZero() {
 		err := r.Delete(context.Background(), kwokMachine)
 		if err != nil {
-			logger.Info("Error deleting KwokMachine", "kwokMachine", kwokMachine.GetName())
+			logger.Info("Error deleting KwokMachine", "err", err)
 			return ctrl.Result{Requeue: true}, nil
 		} else {
 			return ctrl.Result{}, nil
 		}
 	}
 
-	// kwokMachine
+	err = r.Create(context.Background(), kwokMachine)
+	if err != nil {
+		logger.Info("Error creating KwokMachine", "err", err)
+		return ctrl.Result{}, nil
+	}
 
 	return ctrl.Result{}, nil
 }
