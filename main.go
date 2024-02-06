@@ -206,13 +206,13 @@ func setupReconcilers(ctx context.Context, mgr ctrl.Manager) {
 		setupLog.Error(err, "unable to create controller", "controller", "KwokCluster")
 		os.Exit(1)
 	}
-	//if err := (&infracontroller.KwokMachineReconciler{
-	// 	Client: mgr.GetClient(),
-	// 	Scheme: mgr.GetScheme(),
-	// }).SetupWithManager(mgr); err != nil {
-	// 	setupLog.Error(err, "unable to create controller", "controller", "KwokMachine")
-	// 	os.Exit(1)
-	// }
+	if err := (&infracontroller.KwokMachineReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KwokMachine")
+		os.Exit(1)
+	}
 	if err := (&controlplanecontroller.KwokControlPlaneReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
